@@ -37,7 +37,7 @@ public class FXMLController {
     private Button btnCammino;
 
     @FXML
-    private ComboBox<?> boxPorzioni;
+    private ComboBox<String> boxPorzioni;
 
     @FXML
     private TextArea txtResult;
@@ -45,16 +45,53 @@ public class FXMLController {
     @FXML
     void doCammino(ActionEvent event) {
 
+    	this.txtResult.clear();
+    	String partenza = this.boxPorzioni.getValue();
+    	int passi;
+       	try {
+    		passi = Integer.parseInt(this.txtPassi.getText());
+    		
+    		for (String s : this.model.getCammino(passi, partenza))
+    		   this.txtResult.appendText(s+" \n");
+    		
+    		
+    	}
+    	catch(NumberFormatException e) {
+    		this.txtResult.appendText("numero intero");
+    	}
     }
 
     @FXML
     void doCorrelate(ActionEvent event) {
 
+    	this.txtResult.clear();
+    	String partenza = this.boxPorzioni.getValue();
+    	if(this.model.getConnessi(partenza).isEmpty()) {
+    		this.txtResult.appendText("non ha correlate");
+    	}
+    	else {
+    		
+    	for (String s : this.model.getConnessi(partenza))
+    		this.txtResult.appendText(s+"\n");
+    	}
     }
 
     @FXML
     void doCreaGrafo(ActionEvent event) {
 
+    	int calorie;
+    	try {
+    		calorie = Integer.parseInt(this.txtCalorie.getText());
+    		this.model.creaGrafo(calorie);
+    		this.txtResult.appendText("GRAFO CREATO \n");
+    		this.txtResult.appendText("VERTICI "+this.model.getNumeroVertici()+"\n");
+    		this.txtResult.appendText("ARCHI "+this.model.getNumeroArchi()+"\n");
+    		this.boxPorzioni.getItems().addAll(this.model.getVertici());
+    		
+    	}
+    	catch(NumberFormatException e) {
+    		this.txtResult.appendText("numero intero");
+    	}
     }
 
     @FXML
